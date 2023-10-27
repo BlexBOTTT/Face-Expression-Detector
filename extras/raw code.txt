@@ -1,0 +1,117 @@
+# Import the Detector class from the feat library
+from feat import Detector
+
+# Create an instance of the Detector class
+detector = Detector(
+    # Specify the face detection model to use (RetinaFace)
+    face_model="retinaface",
+    # Specify the landmark detection model to use (MobileFaceNet)
+    landmark_model="mobilefacenet",
+    # Specify the AU (Action Unit) model to use (XGBoost)
+    au_model='xgb',
+    # Specify the emotion detection model to use (ResMaskNet)
+    emotion_model="resmasknet",
+    # Specify the face pose estimation model to use (Img2Pose)
+    facepose_model="img2pose",
+)
+# Display the detector instance
+detector
+
+
+# Import necessary modules from the feat library
+from feat.utils.io import get_test_data_path
+from feat.plotting import imshow
+import os
+
+# Helper to point to the test data folder
+test_data_dir = get_test_data_path()
+# Get the full path of the "single_face.jpg" image located in the test data folder
+single_face_img_path = os.path.join(test_data_dir, "single_face.jpg")
+# Plot the image using the `imshow` function from the feat library
+imshow(single_face_img_path)
+
+
+
+# Use the `detector` instance to detect faces in the "single_face.jpg" image
+single_face_prediction = detector.detect_image(single_face_img_path)
+# Display the results of the face detection
+single_face_prediction
+
+
+# Access the face bounding box information from the single_face_prediction
+face_boxes = single_face_prediction.facebox
+
+
+# Access the Action Units (AUs) information from the single_face_prediction
+action_units = single_face_prediction.aus
+
+
+# Access the emotions detected in the image from the single_face_prediction
+emotions = single_face_prediction.emotions
+
+
+# Access the face pose (in degrees) from the single_face_prediction
+face_pose = single_face_prediction.facepose
+
+
+# Save the results to a CSV file named "output.csv" without including the index
+single_face_prediction.to_csv("output.csv", index=False)
+
+
+# Import the read_feat function from the feat library to read the CSV file
+from feat.utils.io import read_feat
+
+# Read the data from the "output.csv" using the read_feat function
+input_prediction = read_feat("output.csv")
+# Display the results read from the CSV file
+input_prediction
+
+
+# Generate visualizations of the face detections in the "single_face.jpg" image
+# with the option to exclude titles (add_titles=False)
+figs = single_face_prediction.plot_detections(add_titles=False)
+
+
+# Get the full path of the "multi_face.jpg" image located in the test data folder
+multi_face_image_path = os.path.join(test_data_dir, "multi_face.jpg")
+# Use the `detector` instance to detect faces in the "multi_face.jpg" image
+multi_face_prediction = detector.detect_image(multi_face_image_path)
+# Display the results of the face detection
+multi_face_prediction
+
+
+# Generate visualizations of the face detections in the "multi_face.jpg" image
+# with the option to exclude titles (add_titles=False)
+figs = multi_face_prediction.plot_detections(add_titles=False)
+
+
+# Create a list of image paths, including "single_face.jpg" and "multi_face.jpg"
+img_list = [single_face_img_path, multi_face_image_path]
+# Use the `detector` instance to detect faces in the list of images, one at a time (batch_size=1)
+mixed_prediction = detector.detect_image(img_list, batch_size=1)
+# Display the results of face detection on the list of images
+mixed_prediction
+
+
+# Generate visualizations of the face detections in the list of images (mixed_prediction)
+# with the option to exclude titles (add_titles=False)
+figs = mixed_prediction.plot_detections(add_titles=False)
+
+
+# Extract the first row of face detection data from the mixed_prediction DataFrame
+first_row_detection = mixed_prediction.loc[0]
+
+# Generate visualizations of the face detections corresponding to the first row
+# of the Fex data with the option to exclude titles (add_titles=False)
+figs = first_row_detection.plot_detections(add_titles=False)
+
+
+# Find the unique image file names in the 'input' column of the mixed_prediction DataFrame
+unique_image_names = mixed_prediction['input'].unique()
+# Choose the second unique image file name (index 1)
+img_name = unique_image_names[1]
+# Query the mixed_prediction DataFrame to select rows with the chosen image file name
+selected_detections = mixed_prediction.query("input == @img_name")
+# Generate visualizations of the face detections for the selected image
+# with the option to exclude titles (add_titles=False)
+axes = selected_detections.plot_detections(add_titles=False)
