@@ -1,8 +1,8 @@
 # Face Expression Detection with py-feat 
 
-This repository contains a simple Python script for face detection using the feat library. The script demonstrates how to use various models for face detection, landmark detection, Action Unit (AU) analysis, emotion detection, and face pose estimation.
+This repository contains a simple Python script for face detection using the py-feat library. The script demonstrates how to use various models for face detection, Action Unit (AU) analysis, emotion detection, and face pose estimation.
 
-![Test sample](one-result.jpg)
+![Test sample](extras/one-result.jpg)
 
 ## Getting Started
 
