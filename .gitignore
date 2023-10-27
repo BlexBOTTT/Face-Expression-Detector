@@ -1,0 +1,3 @@
+# exclude folders below to not pushed to repository
+
+.ipynb_checkpoints/
